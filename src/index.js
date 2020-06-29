@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Tray, Menu } = require("electron");
+const { app, BrowserWindow, Tray, Menu, ipcMain } = require("electron");
 const path = require("path");
 
 if (require("electron-squirrel-startup")) {
@@ -7,24 +7,32 @@ if (require("electron-squirrel-startup")) {
 
 const createWindow = () => {
     const mainWindow = new BrowserWindow({
-        width: 200,
+        width: 100,
         height: 200,
+        title: "우왁굳",
         frame: false,
-        icon: "wakdoo.ico",
+        icon: path.join(__dirname, "wakdoo.ico"),
         transparent: true,
         alwaysOnTop: true,
-        fullScreenable: false,
         webPreferences: {
-            nodeIntegration: true
-        }
+            nodeIntegration: true,
+            enableRemoteModule: true
+        },
+        skipTaskbar: true,
+        hasShadow: false,
+        maximizable: false,
+        resizable: false,
+        fullscreenable: false
     });
     
     mainWindow.setIgnoreMouseEvents(true);
-    mainWindow.setSkipTaskbar(true);
 
     mainWindow.loadFile(path.join(__dirname, "index.html"));
+    mainWindow.removeMenu();
 
-    //mainWindow.removeMenu();
+    ipcMain.on("getwakid", (event) => {
+        event.returnValue = mainWindow.webContents.id;
+    });
 };
 
 app.on("ready", createWindow);

@@ -1,8 +1,8 @@
 {
   "name": "najakwak",
-  "productName": "najakwak",
+  "productName": "나만의 작은 우왁굳",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "당신의 컴퓨터에서 살아 숨쉬는 하나뿐인 왁굳",
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
@@ -10,6 +10,10 @@
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\""
+  },
+  "win": {
+    "target": [    ],
+    "icon": "src/wakdoo.ico"
   },
   "keywords": [],
   "author": {
@@ -19,7 +23,9 @@
   "license": "MIT",
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "icon": "src/wakdoo.ico"
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
@@ -45,6 +51,7 @@
     }
   },
   "dependencies": {
+    "electron-reload": "^1.5.0",
     "electron-squirrel-startup": "^1.0.0"
   },
   "devDependencies": {

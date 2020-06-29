@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>나작왁 세팅</title>
+        <meta charset="UTF-8">
+        <style>
+            html {
+                width: 100%;
+            }
+            body {
+                width: 100%;
+                background-color: #ebebeb;
+                margin: 0;
+                user-select: none;
+                overflow: hidden;
+            }
+            button {
+                font-size: 15px;
+                margin-left: 5px;
+                float: right;
+                position: relative;
+                bottom: 0px;
+                background-color: #fff;
+                border-radius: 5px;
+                border: #1c1c1c solid 1px;
+                transition: all ease-in-out 0.3s 0s;
+            }
+            button:hover {
+                background-color: #fff;
+                bottom: 2px;
+                box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 5px;
+            }
+        </style>
+    </head>
+    <body>
+        <form style="width: 100%; height: 300px; margin: 0; margin-top: 10px; padding: 20px;" oninput="result.value = Number(opacity.value); apply.disabled = false; updateObj();">
+            <label for="maxstep" title="처음 스폰된 자리로부터 움직일 수 있는 거리(1초 단위)">최대 거리: <input type="number" id="maxstep" style="width: 100px" min="0"></label><br><br>
+            불투명도 <input type="range" min="0" max="100" name="opacity" id="opacity"> <output id="result" name="result" for="opacity">50</output>%<br><br>
+            <label title="우왁굳이 화면의 끝에서 사라지면 화면의 반대쪽 끝에서 등장합니다." for="endless"><input type="checkbox" id="endless"> 네버엔딩 스크린</label><br><br>
+            
+        </form>
+        <div style="position: absolute; bottom: 80px; height: 50px; width: 270px; margin: 0; padding: 10px; color: #4f4f4f">
+            <i title="fainthit@kakao.com">만든 팬치:<br>이공계 팬치(코어)</i><br>
+            <a title="이 프로그램의 모든 요소는 저작권법에 의해 보호됩니다. 영리 목적의 2차 배포 또는 원 저작권자의 허락 없는 2차 변형을 금합니다." href="https://github.com/hinaple/najakwak">소스코드</a><br>
+            <a title="형이 없으면 그냥 왁굳 사랑하는 커뮤니티" href="https://cafe.naver.com/steamindiegame">우리 왁굳끼리</a>
+            <a title="우리가 제일 사랑하는 왁굳형이 두달동안 광고비 못빨아먹은 그 곳" href="https://www.youtube.com/user/woowakgood">왁튜브</a><br><br>
+            <button id="cancel">닫기</button>
+            <button disabled id="apply" title="설정은 프로그램 재시작 후에 적용됩니다.">저장</button>
+            <button id="savepos" title="다음 실행 때 현재 우왁굳의 자리에서 실행됩니다.">시작 위치 지정</button> 
+        </div>
+    </body>
+    <script src="setting.js"></script>
+</html>
