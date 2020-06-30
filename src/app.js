@@ -23,14 +23,25 @@ const userData = app.getPath("userData").replace(/\\/g, "/");
 
 const win = getCurrentWindow();
 
+function showMsg(title, content) {
+    tray.displayBalloon({
+        icon: path.join(__dirname, "wakdoo.ico"),
+        title: title,
+        content: content,
+        nosound: true
+    });
+}
+
 let settings = null;
-const settingList = [ "maxstep", "opacity", "endless", "startx", "starty" ];
+const settingList = [ "maxstep", "opacity", "endless", "startx", "starty", "shwmesi", "onshadow", "speed" ];
 const settingTemplate = {
     maxstep: 2,
     opacity: 100,
     endless: true,
     startx: screen.getPrimaryDisplay().workAreaSize.width / 2 - (WINDOW_WIDTH / 2),
-    starty: screen.getPrimaryDisplay().workAreaSize.height / 2 - (WINDOW_HEIGHT / 2)
+    starty: screen.getPrimaryDisplay().workAreaSize.height / 2 - (WINDOW_HEIGHT / 2),
+    shwmesi: true,
+    onshadow: true
 };
 try {
     settings = JSON.parse(fs.readFileSync(userData + "/setting.json", "utf-8"));
@@ -48,9 +59,15 @@ catch(err) {
     fs.writeFileSync(userData + "/setting.json", JSON.stringify(settings), 'utf-8');
 }
 
+if(settings.onshadow) {
+    ctx.shadowColor = "#000";
+    ctx.shadowBlur = 7;
+}
+
 tray = new Tray(path.join(__dirname, "wakdoo.ico"));
 
 let settingWin = null;
+let messiWin = null;
 const contextMenu = Menu.buildFromTemplate([
     {
         label: "설정",
@@ -63,7 +80,7 @@ const contextMenu = Menu.buildFromTemplate([
                 parent: win,
                 icon: path.join(__dirname, "wakdoo.ico"),
                 width: 300,
-                height: 400,
+                height: 430,
                 resizable: false,
                 maximizable: false,
                 fullscreenable: false,
@@ -76,7 +93,7 @@ const contextMenu = Menu.buildFromTemplate([
             settingWin.removeMenu();
             settingWin.loadFile("src/setting.html");
 
-            settingWin.once("close", () => {
+            settingWin.on("close", () => {
                 settingWin = null;
             });
         }
@@ -88,6 +105,12 @@ const contextMenu = Menu.buildFromTemplate([
         click: () => {
             movable = !movable;
             win.setIgnoreMouseEvents(!movable);
+            showMsg(
+                "오영택님에게서 온 메시지",
+                movable?
+                "이제부터 저를 드래그해서 옮길 수 있어요~ 방해 안되게 가만히 있을게요~":
+                "어~ 다 옮겼어? 이제 빨빨대도 되지?"
+            );
         }
     },
     { type: "separator" },
@@ -102,19 +125,14 @@ const contextMenu = Menu.buildFromTemplate([
 tray.setToolTip("나만의 작은 왁굳");
 tray.setContextMenu(contextMenu);
 
-tray.displayBalloon({
-    icon: path.join(__dirname, "wakdoo.ico"),
-    title: "오영택님에게서 온 메시지",
-    content: "왁하~ 오른쪽 아래에 제 얼굴 누르면 절 옮길 수 있어요~ 킹아!",
-    nosound: true
-});
+showMsg("오영택님에게서 온 메시지", "왁하~ 오른쪽 아래에 제 얼굴 우클릭하면 옵션 나와요~ 킹아!");
 
 let imgs = {
     default: [],
     walk: []
 };
 
-let imgcnt = {
+const imgcnt = {
     default: 2,
     walk: 4
 };
@@ -135,6 +153,36 @@ for(name in imgs) {
 
 ctx.globalAlpha = settings.opacity / 100;
 win.setPosition(settings.startx, settings.starty);
+if(settings.shwmesi) {
+    messiWin = new BrowserWindow({
+        parent: win,
+        width: 120,
+        height: 100,
+        title: "메시",
+        frame: false,
+        icon: path.join(__dirname, "wakdoo.ico"),
+        transparent: true,
+        alwaysOnTop: true,
+        webPreferences: {
+            nodeIntegration: true,
+            enableRemoteModule: true
+        },
+        skipTaskbar: true,
+        hasShadow: false,
+        maximizable: false,
+        resizable: false,
+        fullscreenable: false
+    });
+
+    messiWin.setIgnoreMouseEvents(true);
+
+    messiWin.loadFile(path.join(__dirname, "messi.html"));
+    messiWin.removeMenu();
+
+    ipcRenderer.on("settings", () => {
+        ipcRenderer.sendTo(messiWin.webContents.id, "settings", settings);
+    });
+}
 
 setInterval(() => {
     ctx.clearRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -158,7 +206,12 @@ setInterval(() => {
 }, 15);
 
 setInterval(() => {
+    if(!win.isAlwaysOnTop()) mainWindow.setAlwaysOnTop(true);
     tempwalking = Math.floor(Math.random() * 5);
+    if(movable) {
+        walking[1] = false;
+        tempwalking = 1;
+    }
     if(tempwalking == 0) {
         farfromhome--;
         if(Math.abs(farfromhome) > settings.maxstep) {
@@ -190,10 +243,5 @@ ipcRenderer.on("getpos", () => {
 });
 
 ipcRenderer.on("message", (event, msg) => {
-    tray.displayBalloon({
-        icon: path.join(__dirname, "wakdoo.ico"),
-        title: msg[0],
-        content: msg[1],
-        nosound: true
-    });
-})
+    showMsg(msg[0], msg[1]);
+});

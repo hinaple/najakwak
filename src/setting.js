@@ -1,13 +1,14 @@
 const { remote, ipcRenderer } = require("electron")
-const { app, getCurrentWindow } = remote;
+const { app, getCurrentWindow, BrowserWindow } = remote;
 const fs = require("fs");
 
 const win = getCurrentWindow();
-let parentId = null;
 
 const maxstep = document.getElementById("maxstep");
 const opacity = document.getElementById("opacity");
 const endless = document.getElementById("endless");
+const shwmesi = document.getElementById("shwMesi");
+const onshadow = document.getElementById("onshadow");
 
 const savepos = document.getElementById("savepos");
 const apply = document.getElementById("apply");
@@ -18,12 +19,16 @@ let obj = JSON.parse(fs.readFileSync(app.getPath("userData").replace(/\\/g, "/")
 maxstep.value = obj.maxstep;
 opacity.value = obj.opacity;
 endless.checked = obj.endless;
+shwmesi.checked = obj.shwmesi;
+onshadow.checked = obj.onshadow;
 document.getElementById("result").value = opacity.value;
 
 function updateObj() {
     obj.maxstep = maxstep.value;
     obj.opacity = opacity.value;
     obj.endless = endless.checked;
+    obj.shwmesi = shwmesi.checked;
+    obj.onshadow = onshadow.checked;
 }
 
 savepos.addEventListener("click", () => {
@@ -46,4 +51,4 @@ ipcRenderer.on("wakpos", (event, pos) => {
     obj.starty = pos[1];
 });
 
-parentId = ipcRenderer.sendSync("getwakid");
+let parentId = BrowserWindow.fromId(ipcRenderer.sendSync("getwakwin")).webContents.id;

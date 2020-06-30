@@ -30,14 +30,19 @@
                 bottom: 2px;
                 box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 5px;
             }
+            .tab { white-space: pre; }
         </style>
     </head>
     <body>
         <form style="width: 100%; height: 300px; margin: 0; margin-top: 10px; padding: 20px;" oninput="result.value = Number(opacity.value); apply.disabled = false; updateObj();">
             <label for="maxstep" title="처음 스폰된 자리로부터 움직일 수 있는 거리(1초 단위)">최대 거리: <input type="number" id="maxstep" style="width: 100px" min="0"></label><br><br>
-            불투명도 <input type="range" min="0" max="100" name="opacity" id="opacity"> <output id="result" name="result" for="opacity">50</output>%<br><br>
-            <label title="우왁굳이 화면의 끝에서 사라지면 화면의 반대쪽 끝에서 등장합니다." for="endless"><input type="checkbox" id="endless"> 네버엔딩 스크린</label><br><br>
-            
+            불투명도 <input type="range" min="0" max="100" name="opacity" id="opacity"> <output id="result" name="result" for="opacity">50</output>%<br>
+            <!--속도 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="range" min="1" max="5" name="speed" id="speed"> <output id="result" name="resultspd" for="speed">2</output><br--><br>
+            <label title="우왁굳이 화면의 끝에서 사라지면 화면의 반대쪽 끝에서 등장합니다." for="endless"><input type="checkbox" id="endless"> 네버엔딩 스크린</label><br>
+            <label title="우왁굳이 메시와 함께 산책합니다." for="shwMesi"><input type="checkbox" id="shwMesi"> 메시 표시</label><br>
+            <label title="우왁굳과 메시에 그림자가 생깁니다. 배경과 구분이 쉬워집니다." for="onshadow"><input type="checkbox" id="onshadow"> 그림자 켜기</label><br>
+            <!--label title="프로그램이 윈도우가 켜질 때 같이 켜집니다." for="autoStart"><input type="checkbox" id="autoStart"> 윈도우 로그인 시 자동 실행</label><br--><br>
+            <button type="button" id="savepos" style="float: left;" title="다음 실행 때 현재 우왁굳의 자리에서 실행됩니다.">시작 위치 지정</button> 
         </form>
         <div style="position: absolute; bottom: 80px; height: 50px; width: 270px; margin: 0; padding: 10px; color: #4f4f4f">
             <i title="fainthit@kakao.com">만든 팬치:<br>이공계 팬치(코어)</i><br>
@@ -46,7 +51,6 @@
             <a title="우리가 제일 사랑하는 왁굳형이 두달동안 광고비 못빨아먹은 그 곳" href="https://www.youtube.com/user/woowakgood">왁튜브</a><br><br>
             <button id="cancel">닫기</button>
             <button disabled id="apply" title="설정은 프로그램 재시작 후에 적용됩니다.">저장</button>
-            <button id="savepos" title="다음 실행 때 현재 우왁굳의 자리에서 실행됩니다.">시작 위치 지정</button> 
         </div>
     </body>
     <script src="setting.js"></script>

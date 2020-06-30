@@ -30,8 +30,12 @@ const createWindow = () => {
     mainWindow.loadFile(path.join(__dirname, "index.html"));
     mainWindow.removeMenu();
 
-    ipcMain.on("getwakid", (event) => {
-        event.returnValue = mainWindow.webContents.id;
+    mainWindow.on("always-on-top-changed", (event, isAlwaysTop) => {
+        if(!isAlwaysTop) mainWindow.setAlwaysOnTop(true);
+    });
+
+    ipcMain.on("getwakwin", (event) => {
+        event.returnValue = mainWindow.id;
     });
 };
 
