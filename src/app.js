@@ -33,7 +33,7 @@ function showMsg(title, content) {
 }
 
 let settings = null;
-const settingList = [ "maxstep", "opacity", "endless", "startx", "starty", "shwmesi", "onshadow", "speed" ];
+const settingList = [ "maxstep", "opacity", "endless", "startx", "starty", "shwmesi", "onshadow" ];
 const settingTemplate = {
     maxstep: 2,
     opacity: 100,
