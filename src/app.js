@@ -33,7 +33,7 @@ function showMsg(title, content) {
 }
 
 let settings = null;
-const settingList = [ "maxstep", "opacity", "endless", "startx", "starty", "shwmesi", "onshadow" ];
+const settingList = [ "maxstep", "opacity", "endless", "startx", "starty", "shwmesi", "onshadow", "speed" ];
 const settingTemplate = {
     maxstep: 2,
     opacity: 100,
@@ -41,7 +41,8 @@ const settingTemplate = {
     startx: screen.getPrimaryDisplay().workAreaSize.width / 2 - (WINDOW_WIDTH / 2),
     starty: screen.getPrimaryDisplay().workAreaSize.height / 2 - (WINDOW_HEIGHT / 2),
     shwmesi: true,
-    onshadow: true
+    onshadow: true,
+    speed: 1
 };
 try {
     settings = JSON.parse(fs.readFileSync(userData + "/setting.json", "utf-8"));
@@ -103,6 +104,7 @@ const contextMenu = Menu.buildFromTemplate([
         type: "checkbox",
         checked: false,
         click: () => {
+            win.setAlwaysOnTop(true);
             movable = !movable;
             win.setIgnoreMouseEvents(!movable);
             showMsg(
@@ -194,7 +196,7 @@ setInterval(() => {
     let tempImg = null;
     if(!walking[1]) tempImg = imgs.default[walking[0]][Math.floor(time / 30) % 2];
     else {
-        win.setPosition(winpos[0] + (walking[0] == 0? 1: -1), winpos[1]);
+        win.setPosition(winpos[0] + ((walking[0] == 0? settings.speed: -settings.speed)), winpos[1]);
         if(settings.endless) {
             if(winpos[0] + WINDOW_WIDTH < 0) win.setPosition(SCREEN_WIDTH, winpos[1]);
             else if(winpos[0] > SCREEN_WIDTH) win.setPosition(-WINDOW_WIDTH, winpos[1]);
@@ -212,7 +214,7 @@ setInterval(() => {
         walking[1] = false;
         tempwalking = 1;
     }
-    if(tempwalking == 0) {
+    else if(tempwalking == 0) {
         farfromhome--;
         if(Math.abs(farfromhome) > settings.maxstep) {
             farfromhome++;
